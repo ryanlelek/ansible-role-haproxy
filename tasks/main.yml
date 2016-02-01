@@ -1,1 +1,31 @@
 ---
+
+# See Also: https://launchpad.net/~vbernat/+archive/ubuntu/haproxy-1.5
+
+# Manual Bash
+# Install Tools for add-apt-repository
+# aptitude install software-properties-common;
+# add-apt-repository -y ppa:vbernat/haproxy-1.5;
+
+- name: Authorize the package signing key for HAProxy PPA
+  apt_key: url="http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xCFFB779AADC995E4F350A060505D97A41C61B9CD" state=present
+
+- name: Add HAProxy Binary Repository
+  apt_repository: repo='deb http://ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu trusty main' state=present update_cache=no
+
+- name: Add HAProxy Source Repository
+  apt_repository: repo='deb-src http://ppa.launchpad.net/vbernat/haproxy-1.5/ubuntu trusty main' state=present update_cache=yes
+
+- name: Install HAProxy Package
+  apt: name=haproxy state=latest
+
+- name: Configure HAProxy
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg owner=root group=root mode=0644
+  notify: Restart HAProxy
+
+# Edit RSysLog (Not Needed Yet)
+# vim /etc/rsyslog.d/49-haproxy.conf
+# vim /etc/rsyslog.conf
+
+- name: Ensure HAProxy is started
+  service: name=haproxy state=started enabled=yes

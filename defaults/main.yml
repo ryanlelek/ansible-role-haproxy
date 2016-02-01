@@ -1,1 +1,6 @@
 ---
+haproxy_stats:          false
+haproxy_stats_port:     1234
+haproxy_stats_uri:      /haproxy
+haproxy_stats_users:
+  - { username: username, password: password }
